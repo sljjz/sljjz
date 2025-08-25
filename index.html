@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>东北家乡验证程序</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f7ff 0%, #fff1eb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            touch-action: manipulation;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        h1 {
+            color: #e62129;
+            margin-bottom: 15px;
+            font-size: 22px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            transition: border-color 0.3s;
+            background: #fff;
+        }
+        
+        .password-input:focus {
+            border-color: #e62129;
+            outline: none;
+        }
+        
+        .submit-btn {
+            background: #e62129;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .submit-btn:hover {
+            background: #c41a22;
+        }
+        
+        .message {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .warning {
+            color: #e62129;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        
+        .snowflake {
+            position: absolute;
+            color: #aaa;
+            font-size: 20px;
+            opacity: 0.8;
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .northern-lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(230,33,41,0.2), rgba(0,120,215,0.2), rgba(54,179,79,0.2));
+            opacity: 0.5;
+            z-index: 0;
+            animation: aurora 15s infinite linear;
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .volume-control {
+            margin-top: 15px;
+            color: #666;
+        }
+        
+        .music-note {
+            position: absolute;
+            font-size: 24px;
+            color: #e62129;
+            animation: float 5s infinite ease-in-out;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .mobile-header .icon {
+            font-size: 28px;
+            color: #e62129;
+        }
+        
+        .instructions {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 13px;
+        }
+        
+        .instructions h3 {
+            color: #e62129;
+            margin-bottom: 8px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .hint-box {
+            background: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #e65100;
+        }
+        
+        /* 防止手机浏览器工具栏 */
+        @media (max-height: 700px) {
+            .container {
+                padding: 20px;
+                transform: scale(0.9);
+            }
+        }
+        
+        /* 防止缩放 */
+        @media (max-width: 360px) {
+            .container {
+                padding: 15px;
+                transform: scale(0.85);
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="northern-lights"></div>
+    
+    <div class="container">
+        <div class="mobile-header">
+            <i class="fas fa-music icon"></i>
+            <h1>🌾 东北家乡验证 🌾</h1>
+            <i class="fas fa-lock icon"></i>
+        </div>
+        
+        <p class="message">请输入密码关闭此程序：</p>
+        
+        <input type="text" class="password-input" id="passwordInput" placeholder="请输入密码..." autocapitalize="off" autocomplete="off">
+        
+        <button class="submit-btn" onclick="checkPassword()">
+            <i class="fas fa-check-circle"></i> 提交验证
+        </button>
+        
+        <div class="hint-box">
+            <i class="fas fa-question-circle"></i> 谁的45码大汗脚最带派？
+        </div>
+        
+        <p class="warning" id="warningText">注意：无法直接关闭此页面！</p>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+            <ul>
+                <li>输入正确密码才能退出程序</li>
+                <li>音量控制已被禁用</li>
+                <li>页面无法直接关闭</li>
+            </ul>
+        </div>
+    </div>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://sq-sycdn.kuwo.cn/63fab1a636b6f12086f9f2797173d0fb/68ab250e/resource/n3/7/33/1785011434.mp3?from=vip" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // 创建雪花效果
+        function createSnowflakes() {
+            const snowflakes = ['❄', '🌾', '🎵', '❤', '🎶'];
+            const body = document.body;
+            
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 15 + 16) + 'px';
+                
+                body.appendChild(snowflake);
+            }
+        }
+        
+        // 创建音乐符号
+        function createMusicNotes() {
+            const body = document.body;
+            const notes = ['🎵', '🎶', '🎷', '🎺', '🥁'];
+            
+            for (let i = 0; i < 8; i++) {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                
+                note.style.left = Math.random() * 100 + 'vw';
+                note.style.top = Math.random() * 100 + 'vh';
+                note.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                note.style.animationDelay = Math.random() * 3 + 's';
+                
+                body.appendChild(note);
+            }
+        }
+        
+        // 检查密码
+        function checkPassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const warningText = document.getElementById('warningText');
+            
+            if (passwordInput.value === '东北雨姐') {
+                warningText.textContent = '验证成功！程序即将关闭...';
+                warningText.style.color = 'green';
+                
+                // 停止音乐
+                const bgMusic = document.getElementById('bgMusic');
+                bgMusic.pause();
+                
+                // 禁用输入和按钮
+                passwordInput.disabled = true;
+                document.querySelector('.submit-btn').disabled = true;
+                
+                // 显示关闭提示
+                setTimeout(() => {
+                    alert('验证成功！现在您可以关闭此页面了。');
+                    document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;background:#f0f8ff;padding:20px;text-align:center;"><h1 style="color:green;margin-bottom:20px;font-size:24px;">验证成功！</h1><p style="font-size:18px;">您现在可以安全关闭此页面了。</p><i class="fas fa-check-circle" style="font-size:50px;color:green;margin-top:20px;"></i></div>';
+                }, 1500);
+            } else {
+                warningText.textcontent = '密码错误，请重新输入！';
+                passwordInput.value = '';
+                
+                // 抖动输入框
+                passwordInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    passwordInput.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createSnowflakes();
+            createMusicNotes();
+            
+            // 添加按键监听
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // 禁用右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                alert('此操作已被禁止！');
+            });
+            
+            // 防止后退按钮
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function() {
+                window.history.pushState(null, null, window.location.href);
+                alert('无法返回，请输入正确密码退出！');
+            };
+            
+            // 禁用缩放和手势
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+            
+            // 设置音乐
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.volume = 1.0;
+            
+            // 显示提示
+            setTimeout(function() {
+                alert('欢迎来到东北家乡验证程序！\n您需要输入正确密码"东北雨姐"才能退出。\n\n提示：谁的45码大汗脚最带派？');
+            }, 1000);
+            
+            // 点击页面任意位置开始播放音乐
+            document.body.addEventListener('click', function() {
+                bgMusic.play().catch(e => {
+                    console.log('音乐播放需要用户交互');
+                });
+                
+                // 移除点击监听，避免重复绑定
+                document.body.removeEventListener('click', arguments.callee);
+            });
+        });
+        
+        // 添加抖动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            
+            /* 防止长按菜单 */
+            * {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            
+            input, textarea {
+                -webkit-user-select: text;
+                user-select: text;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
