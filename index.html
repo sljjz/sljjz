@@ -15,8 +15,8 @@
         }
         
         body {
-            background: url('https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,6 +26,13 @@
             width: 100%;
             height: 100%;
             touch-action: manipulation;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .container {
@@ -97,30 +104,12 @@
         
         .snowflake {
             position: absolute;
-            color: #aaa;
+            color: #fff;
             font-size: 20px;
             opacity: 0.8;
             z-index: 1;
             user-select: none;
             pointer-events: none;
-        }
-        
-        .northern-lights {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(230,33,41,0.2), rgba(0,120,215,0.2), rgba(54,179,79,0.2));
-            opacity: 0.5;
-            z-index: 0;
-            animation: aurora 15s infinite linear;
-        }
-        
-        @keyframes aurora {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         
         .volume-control {
@@ -187,77 +176,159 @@
             color: #e65100;
         }
         
-        /* 浮动确认对话框样式 */
-        #unload-overlay {
+        /* 加载界面样式 */
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            animation: gradientBG 15s ease infinite;
         }
         
-        #unload-dialog {
-            position: absolute;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #e62129;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-container {
+            width: 80%;
+            max-width: 300px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #e62129, #ff8c00);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
             text-align: center;
-            min-width: 320px;
-            max-width: 90%;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            animation: shake-dialog 0.8s ease;
+            color: white;
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 12px;
+            position: relative;
+            overflow: hidden;
         }
         
-        @keyframes shake-dialog {
-            0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
-            25% { transform: translateX(-8px) rotate(-2deg) scale(1.02); }
-            50% { transform: translateX(8px) rotate(2deg) scale(0.98); }
-            75% { transform: translateX(-5px) rotate(-1deg) scale(1.01); }
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg, 
+                rgba(255, 255, 255, 0.2) 25%, 
+                transparent 25%, 
+                transparent 50%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.2) 75%, 
+                transparent 75%, 
+                transparent
+            );
+            z-index: 1;
+            background-size: 20px 20px;
+            animation: move 1s linear infinite;
+            overflow: hidden;
         }
         
-        .dialog-buttons {
-            margin-top: 20px;
+        @keyframes move {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 20px 20px;
+            }
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 10px;
+            text-align: center;
+            max-width: 300px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .homework-icons {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            margin: 15px 0;
             flex-wrap: wrap;
         }
         
-        .dialog-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+        .homework-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .loading-tip {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: white;
+            max-width: 300px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .skip-loading {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            min-width: 120px;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
-        #stay-btn {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        #stay-btn:hover {
-            background: #45a049;
-            transform: scale(1.08);
-        }
-        
-        #leave-btn {
-            background: #e62129;
-            color: white;
-        }
-        
-        #leave-btn:hover {
-            background: #c41a22;
-            transform: scale(1.08);
+        .skip-loading:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
         
         /* 防止手机浏览器工具栏 */
@@ -277,16 +348,6 @@
             
             h1 {
                 font-size: 20px;
-            }
-            
-            #unload-dialog {
-                min-width: 280px;
-                padding: 20px;
-            }
-            
-            .dialog-btn {
-                min-width: 100px;
-                padding: 10px 20px;
             }
         }
 
@@ -310,170 +371,34 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
             20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
-
-        /* 修改加载界面样式 */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            flex-direction: column;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #e62129;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* 添加进度条样式 */
-        .progress-container {
-            width: 80%;
-            max-width: 300px;
-            height: 20px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 极速3s ease;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            line-height: 20px;
-            font-size: 12px;
-        }
-        
-        .loading-text {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .loading-subtext {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-            text-align: center;
-            max-width: 300px;
-        }
-        
-        .homework-icons {
-            display: flex;
-            justify-content: center;
-            margin: 极速15px 0;
-            flex-wrap: wrap;
-        }
-        
-极速.homework-icon {
-            font-size: 24px;
-            margin: 0 10px;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* 资源完整性检查样式 */
-        .verification-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            z-index: 1001;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            display: none;
-        }
-        
-        .verification-text {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .verification-progress {
-            width: 80%;
-            max-width: 300px;
-极速height: 20px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .verification-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #2196F3, #21CBF3);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.3s ease;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            line-height: 20px;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
     <div class="loading" id="loading">
-        <极速div class="spinner"></div>
-        <div class="loading-text">自动写作业网页加载中...</div>
+        <div class="spinner"></div>
+        <div class="loading-text">东北家乡验证程序加载中...</div>
+        
         <div class="homework-icons">
-            <div class="homework-icon">📚</div>
-            <div class="homework-icon">📝</div>
-            <div class="homework-icon">✏️</div>
-            <div class="homework-icon">📖</div>
-            <div class="homework-icon">🔢</div>
+            <div class="homework-icon">🌾</div>
+            <div class="homework-icon">❄️</div>
+            <div class="homework-icon">🏠</div>
+            <div class="homework-icon">🎵</div>
+            <div class="homework-icon">🔒</div>
         </div>
+        
         <div class="progress-container">
             <div class="progress-bar" id="progressBar">0%</div>
         </div>
-        <div class="loading-subtext" id="loadingSubtext">正在初始化学习资源，请稍候...</div>
-        <div class="loading-subtext" id="timeRemaining">预计剩余时间: 5分钟</div>
-    </div>
-    
-    <!-- 资源完整性检查界面 -->
-    <div class="verification-container" id="verificationContainer">
-        <div class="loading-text">资源完整性核验</div>
-        <div class="verification-text" id="verificationText">正在检查资源完整性...</极速div>
-        <div class="verification-progress">
-            <div class="verification-bar" id="verificationBar">0%</div>
-        </div>
-        <div class="loading-subtext">此过程通常需要3秒</div>
+        
+        <div class="loading-tip" id="loadingTip">正在初始化，请稍候...</div>
+        
+        <div class="loading-subtext" id="timeRemaining">预计剩余时间: 30秒</div>
+        
+        <button class="skip-loading" id="skipLoading" style="display:none;">
+            <i class="fas fa-forward"></i> 跳过加载
+        </button>
     </div>
 
-    <div class="northern-lights"></div>
-    
     <div class="container">
         <div class="mobile-header">
             <i class="fas fa-music icon"></i>
@@ -499,19 +424,17 @@
             <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
             <ul>
                 <li>输入正确密码才能退出程序</li>
-                <li>音量控制已被禁用</极速li>
+                <li>音量控制已被禁用</li>
                 <li>页面无法直接关闭</li>
             </ul>
         </div>
     </div>
     
-    <!-- 修改音乐文件为GitHub URL -->
     <audio id="bgMusic" loop>
         <source src="https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/大东北是我的家乡.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素。
     </audio>
     
-    <!-- 添加点击音效，使用GitHub URL -->
     <audio id="clickSound">
         <source src="https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/your-click-sound.mp3" type="audio/mpeg">
     </audio>
@@ -520,9 +443,10 @@
         // 全局变量
         let loadInterval;
         let resourcesAlreadyLoaded = false;
-        let totalLoadTime = 300; // 5分钟 = 300秒
+        let totalLoadTime = 30; // 30秒
         let elapsedTime = 0;
-        let resourceCheckTimeout;
+        let resourcesLoaded = 0;
+        let totalResources = 5;
         
         // 创建雪花效果
         function createSnowflakes() {
@@ -537,7 +461,7 @@
                 snowflake.style.left = Math.random() * 100 + 'vw';
                 snowflake.style.animationDuration = (Math.random() * 5 + 3) + 's';
                 snowflake.style.animationDelay = Math.random() * 5 + 's';
-                snowflake.style.fontSize = (Math.random() * 15极速 + 16) + 'px';
+                snowflake.style.fontSize = (Math.random() * 15 + 16) + 'px';
                 
                 body.appendChild(snowflake);
             }
@@ -546,7 +470,7 @@
         // 创建音乐符号
         function createMusicNotes() {
             const body = document.body;
-            const notes = ['🎵', '🎶', '极速🎷', '🎺', '🥁'];
+            const notes = ['🎵', '🎶', '🎷', '🎺', '🥁'];
             
             for (let i = 0; i < 8; i++) {
                 const note = document.createElement('div');
@@ -573,7 +497,7 @@
         
         // 检查密码
         function checkPassword() {
-            playClickSound(); // 添加点击音效
+            playClickSound();
             
             const passwordInput = document.getElementById('passwordInput');
             const warningText = document.getElementById('warningText');
@@ -623,10 +547,30 @@
             // 创建覆盖层
             const overlay = document.createElement('div');
             overlay.id = 'unload-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(0, 0, 0, 0.7)';
+            overlay.style.zIndex = '10000';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
             
             // 创建会移动的对话框
             const dialog = document.createElement('div');
-            dialog.id极速 = 'unload-dialog';
+            dialog.id = 'unload-dialog';
+            dialog.style.position = 'absolute';
+            dialog.style.background = 'white';
+            dialog.style.padding = '25px';
+            dialog.style.borderRadius = '15px';
+            dialog.style.boxShadow = '0 15px 35px rgba(0,0,0,0.4)';
+            dialog.style.textAlign = 'center';
+            dialog.style.minWidth = '320px';
+            dialog.style.maxWidth = '90%';
+            dialog.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            dialog.style.animation = 'shake-dialog 0.8s ease';
             
             // 设置随机初始位置
             const randomX = Math.random() * (window.innerWidth - 320);
@@ -637,10 +581,10 @@
             dialog.innerHTML = `
                 <h3 style="color: #e62129; margin-bottom: 15px;"><i class="fas fa-exclamation-triangle"></i> 验证未完成！</h3>
                 <p style="margin-bottom: 10px; line-height: 1.5;">您确定要离开吗？</p>
-                <p style="margin-bottom: 15极速px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
-                <div class="dialog-buttons">
-                    <button id="stay-btn" class="dialog-btn"><i class="fas fa-shield-alt"></极速i> 留下继续</button>
-                    <button id="leave-btn极速" class="dialog-btn"><i class="fas fa-running"></i> 强行离开</button>
+                <p style="margin-bottom: 15px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
+                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <button id="stay-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #4CAF50; color: white;">留下继续</button>
+                    <button id="leave-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #e62129; color: white;">强行离开</button>
                 </div>
             `;
             
@@ -650,14 +594,14 @@
             
             // 添加事件监听：点击"留下"按钮
             document.getElementById('stay-btn').addEventListener('click', function() {
-                playClickSound(); // 添加点击音效
+                playClickSound();
                 document.body.removeChild(overlay);
                 document.body.style.overflow = '';
             });
             
             // 添加事件监听：点击"离开"按钮
             document.getElementById('leave-btn').addEventListener('click', function() {
-                playClickSound(); // 添加点击音效
+                playClickSound();
                 // 真正离开的逻辑
                 window.removeEventListener('beforeunload', unloadEventHandler);
                 window.location.href = 'about:blank';
@@ -696,7 +640,7 @@
             
             // 触摸设备支持
             dialog.addEventListener('touchstart', function(e) {
-                if (e.target.closest('.dialog-btn')) return;
+                if (e.target.closest('button')) return;
                 e.preventDefault();
                 moveDialog();
             }, { passive: false });
@@ -721,7 +665,7 @@
             const interactionEvents = ['click', 'keydown', 'mousedown', 'touchstart', 'input'];
             interactionEvents.forEach(event => {
                 document.addEventListener(event, function() {
-                    if (!hasInteracted极速) {
+                    if (!hasInteracted) {
                         hasInteracted = true;
                         window.addEventListener('beforeunload', unloadEventHandler);
                     }
@@ -744,68 +688,26 @@
             }
         }
         
-        // 更新核验进度条
-        function updateVerificationProgress(percentage, message) {
-            const verificationBar = document.getElementById('verificationBar');
-            const verificationText = document.getElementById('verificationText');
-            
-            if (verificationBar) {
-                verificationBar.style.width = percentage + '%';
-                verificationBar.textContent = Math.round(percentage) + '%';
-            }
-            
-            if (verificationText && message) {
-                verificationText.textContent = message;
+        // 更新加载提示
+        function updateLoadingTip(message) {
+            const loadingTip = document.getElementById('loadingTip');
+            if (loadingTip) {
+                loadingTip.textContent = message;
             }
         }
         
-        // 更新剩余极速时间显示
+        // 更新剩余时间显示
         function updateTimeRemaining(minutes, seconds) {
-            const timeRemaining = document.getElementById('time极速Remaining');
+            const timeRemaining = document.getElementById('timeRemaining');
             if (timeRemaining) {
                 timeRemaining.textContent = `预计剩余时间: ${minutes}分${seconds}秒`;
             }
-        }
-        
-        // 资源完整性核验
-        function startVerificationProcess() {
-            // 显示核验界面，隐藏加载界面
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('verificationContainer').style.display = 'flex';
-            
-            let progress = 0;
-            const verificationMessages = [
-                "检查资源完整性...",
-                "验证音频文件...",
-                "验证图片资源...",
-                "初始化安全模块...",
-                "准备就绪..."
-            ];
-            
-            // 3秒内完成核验
-            const interval = setInterval(() => {
-                progress += 100/30; // 3秒 = 30*100ms
-                
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    updateVerificationProgress(progress, verificationMessages[4]);
-                    
-                    // 核验完成，初始化页面
-                    setTimeout(initAfterResourcesLoaded, 500);
-                } else {
-                    const messageIndex = Math.floor(progress / 20);
-                    updateVerificationProgress(progress, verificationMessages[messageIndex]);
-                }
-            }, 100);
         }
         
         // 资源加载完成后的初始化
         function initAfterResourcesLoaded() {
             // 隐藏所有加载界面
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('verificationContainer').style.display = 'none';
             
             // 修改网页标题为真实标题
             document.title = "东北家乡验证程序";
@@ -832,7 +734,7 @@
             // 禁用右键菜单
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
-                playClickSound(); // 添加点击音效
+                playClickSound();
                 alert('此操作已被禁止！');
             });
             
@@ -866,7 +768,7 @@
             });
         }
         
-        // 检查资源是否加载完成 - 修改后的版本
+        // 检查资源是否加载完成
         function checkResourcesLoaded() {
             const resources = [
                 'https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg',
@@ -876,105 +778,115 @@
             
             let loadedCount = 0;
             const totalCount = resources.length;
-            let allCached = true;
             
             // 初始进度
-            updateProgress(5, '正在连接服务器...');
+            updateProgress(10, '正在连接服务器...');
+            updateLoadingTip('正在建立安全连接...');
             
-            // 清除之前的超时检查
-            if (resourceCheckTimeout) {
-                clearTimeout(resourceCheckTimeout);
-            }
-            
-            // 检查每个资源
             resources.forEach((url, index) => {
-                // 创建资源元素进行预加载检查
+                // 创建资源加载检测
                 if (url.includes('.jpg') || url.includes('.png')) {
                     // 图片资源
                     const img = new Image();
                     img.onload = function() {
                         loadedCount++;
-                        checkIfAllResourcesLoaded(loadedCount, totalCount, true);
+                        const progress = 10 + (loadedCount / totalCount) * 20;
+                        updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
+                        updateLoadingTip('加载图像资源...');
+                        
+                        if (loadedCount === totalCount) {
+                            updateProgress(30, '资源加载完成，正在初始化页面...');
+                            updateLoadingTip('核心资源已加载，准备初始化...');
+                            
+                            // 如果资源已经加载过，启动快速核验
+                            if (resourcesAlreadyLoaded) {
+                                clearInterval(loadInterval);
+                                initAfterResourcesLoaded();
+                            }
+                        }
                     };
                     img.onerror = function() {
                         loadedCount++;
-                        allCached = false;
-                        checkIfAllResourcesLoaded(loadedCount, totalCount, false);
+                        // 即使加载失败也继续
+                        if (loadedCount === totalCount) {
+                            updateProgress(30, '资源加载完成，正在初始化页面...');
+                            updateLoadingTip('核心资源已加载，准备初始化...');
+                        }
                     };
                     img.src = url;
                 } else if (url.includes('.mp3')) {
-                    // 音频资源
-                    const audio = new Audio();
-                    audio.addEventListener('canplaythrough', function() {
+                    // 音频资源 - 使用更轻量级的检查方式
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('HEAD', url);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            loadedCount++;
+                            const progress = 10 + (loadedCount / totalCount) * 20;
+                            updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
+                            updateLoadingTip('加载音频资源...');
+                            
+                            if (loadedCount === totalCount) {
+                                updateProgress(30, '资源加载完成，正在初始化页面...');
+                                updateLoadingTip('核心资源已加载，准备初始化...');
+                                
+                                if (resourcesAlreadyLoaded) {
+                                    clearInterval(loadInterval);
+                                    initAfterResourcesLoaded();
+                                }
+                            }
+                        }
+                    };
+                    xhr.onerror = function() {
                         loadedCount++;
-                        checkIfAllResourcesLoaded(loadedCount, totalCount, true);
-                    });
-                    audio.addEventListener('error', function() {
-                        loadedCount++;
-                        allCached = false;
-                        checkIfAllResourcesLoaded(loadedCount, totalCount, false);
-                    });
-                    audio.src = url;
-                    audio.load();
-                } else {
-                    // 其他类型资源
-                    loadedCount++;
-                    checkIfAllResourcesLoaded(loadedCount, totalCount, false);
+                        if (loadedCount === totalCount) {
+                            updateProgress(30, '资源加载完成，正在初始化页面...');
+                            updateLoadingTip('核心资源已加载，准备初始化...');
+                        }
+                    };
+                    xhr.send();
                 }
             });
             
-            // 辅助函数：检查所有资源是否已加载
-            function checkIfAllResourcesLoaded(loaded, total, isCached) {
-                const progress = 5 + (loaded / total) * 15;
-                updateProgress(progress, `加载资源中 (${loaded}/${total})...`);
-                
-                if (!isCached) {
-                    allCached = false;
-                }
-                
-                if (loaded === total) {
-                    updateProgress(20, '资源加载完成，正在初始化页面...');
-                    
-                    // 如果资源已经加载过，启动快速核验
-                    if (allCached) {
-                        console.log("资源已缓存，启动快速核验");
-                        resourcesAlreadyLoaded = true;
-                        clearInterval(loadInterval);
-                        startVerificationProcess();
-                    } else {
-                        console.log("资源未完全缓存，继续正常加载流程");
-                    }
-                }
-            }
-            
-            // 设置超时检查，如果资源在1.5秒内全部加载完成，认为是已缓存的
-            resourceCheckTimeout = setTimeout(() => {
+            // 设置超时检查，如果资源在2秒内全部加载完成，也认为是已缓存的
+            setTimeout(() => {
                 if (loadedCount === totalCount && !resourcesAlreadyLoaded) {
-                    console.log("资源快速加载完成，视为已缓存");
                     resourcesAlreadyLoaded = true;
                     clearInterval(loadInterval);
-                    startVerificationProcess();
+                    initAfterResourcesLoaded();
                 }
-            }, 1500);
+            }, 2000);
+            
+            // 10秒后显示跳过按钮
+            setTimeout(() => {
+                const skipLoading = document.getElementById('skipLoading');
+                if (skipLoading) {
+                    skipLoading.style.display = 'block';
+                    skipLoading.addEventListener('click', () => {
+                        clearInterval(loadInterval);
+                        initAfterResourcesLoaded();
+                    });
+                }
+            }, 10000);
         }
         
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 模拟初始加载进度
-            updateProgress(0, '准备加载资源...');
+            updateProgress(5, '准备加载资源...');
+            updateLoadingTip('初始化加载系统...');
             
-            // 设置总加载时间（5分钟 = 300秒）
+            // 设置总加载时间（30秒）
             elapsedTime = 0;
             
             // 模拟加载过程的定时器
             loadInterval = setInterval(function() {
+                elapsedTime++;
+                
                 // 如果资源已经加载完成，跳过模拟加载
                 if (resourcesAlreadyLoaded) {
                     clearInterval(loadInterval);
                     return;
                 }
-                
-                elapsedTime++;
                 
                 // 计算剩余时间
                 const remainingTime = totalLoadTime - elapsedTime;
@@ -984,34 +896,31 @@
                 // 更新剩余时间显示
                 updateTimeRemaining(minutes, seconds);
                 
-                // 计算进度百分比（前20%由真实资源加载决定，后80%由时间决定）
+                // 计算进度百分比（前30%由真实资源加载决定，后70%由时间决定）
                 let progressPercentage = 0;
                 let statusMessage = "";
+                let tipMessage = "";
                 
-                if (elapsedTime < 60) {
+                if (elapsedTime < 10) {
                     // 第一阶段：初始化
-                    progressPercentage = 20 + (elapsedTime / 60) * 20;
+                    progressPercentage = 30 + (elapsedTime / 10) * 20;
                     statusMessage = "初始化学习模块...";
-                } else if (elapsedTime < 120) {
+                    tipMessage = "准备数学公式和算法...";
+                } else if (elapsedTime < 20) {
                     // 第二阶段：加载题库
-                    progressPercentage = 40 + ((elapsedTime - 60) / 60) * 20;
+                    progressPercentage = 50 + ((elapsedTime - 10) / 10) * 20;
                     statusMessage = "加载数学题库...";
-                } else if (elapsedTime < 180) {
-                    // 第三阶段：加载语文极速资源
-                    progressPercentage = 60 + ((elapsedTime - 120) / 60) * 20;
-                    statusMessage = "加载语文资源...";
-                } else if (elapsedTime < 240) {
-                    // 第四阶段：加载英语资源
-                    progressPercentage = 80 + ((elapsedTime - 180) / 60) * 15;
-                    statusMessage = "加载英语资源...";
+                    tipMessage = "下载三角函数和几何题库...";
                 } else {
                     // 最后阶段：完成加载
-                    progressPercentage = 95 + ((elapsedTime - 240) / 60) * 5;
+                    progressPercentage = 70 + ((elapsedTime - 20) / 10) * 30;
                     statusMessage = "最终检查...";
+                    tipMessage = "验证所有资源完整性...";
                 }
                 
-                // 更新进度
+                // 更新进度和提示
                 updateProgress(progressPercentage, statusMessage);
+                updateLoadingTip(tipMessage);
                 
                 // 如果达到总加载时间，完成加载
                 if (elapsedTime >= totalLoadTime) {
@@ -1023,17 +932,23 @@
             // 同时开始真实资源加载检查
             setTimeout(() => {
                 checkResourcesLoaded();
-            }, 1000);
+            }, 500);
             
             // 设置超时，防止资源加载失败导致页面一直显示加载中
             setTimeout(function() {
                 const loading = document.getElementById('loading');
                 if (loading.style.display !== 'none' && !resourcesAlreadyLoaded) {
-                    console.log("加载超时，强制进入主界面");
-                    loading.innerHTML = '<p>部分资源加载较慢或失败，继续加载中...</p><p>您可以尝试刷新页面</p>';
-                    initAfterResourcesLoaded();
+                    updateLoadingTip('资源加载较慢，尝试优化连接...');
+                    
+                    // 再给10秒时间
+                    setTimeout(function() {
+                        if (loading.style.display !== 'none' && !resourcesAlreadyLoaded) {
+                            loading.innerHTML = '<p style="color: white;">部分资源加载较慢</p><p style="color: white;">尝试使用基本功能...</p>';
+                            initAfterResourcesLoaded();
+                        }
+                    }, 10000);
                 }
-            }, (totalLoadTime + 10) * 1000); // 比总加载时间多10秒
+            }, (totalLoadTime + 10) * 1000);
         });
     </script>
 </body>
