@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>东北家乡验证程序</title>
+    <title>自动写作业网页</title> <!-- 修改网页标题 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,7 +15,8 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e6f7ff 0%, #fff1eb 100%);
+            background: url('https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -309,9 +310,85 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
             20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
+
+        /* 修改加载界面样式 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff; /* 改为纯白色背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #e62129;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 添加进度条样式 */
+        .progress-container {
+            width: 80%;
+            max-width: 300px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 12px;
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            color: #333; /* 改为深色文字，在白色背景上可见 */
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            color: #666; /* 改为深色文字，在白色背景上可见 */
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">自动写作业网页加载中...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        <div class="loading-subtext" id="loadingSubtext">正在初始化学习资源，请稍候</div>
+    </div>
+
     <div class="northern-lights"></div>
     
     <div class="container">
@@ -345,10 +422,15 @@
         </div>
     </div>
     
-    <!-- 音乐文件已经改为相对路径，请将bg-music.mp3上传到同一目录 -->
+    <!-- 修改音乐文件为GitHub URL -->
     <audio id="bgMusic" loop>
-        <source src="bg-music.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/大东北是我的家乡.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 添加点击音效，使用GitHub URL -->
+    <audio id="clickSound">
+        <source src="https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/your-click-sound.mp3" type="audio/mpeg">
     </audio>
     
     <script>
@@ -390,8 +472,19 @@
             }
         }
         
+        // 播放点击音效
+        function playClickSound() {
+            const clickSound = document.getElementById('clickSound');
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => {
+                console.log('点击音效播放失败:', e);
+            });
+        }
+        
         // 检查密码
         function checkPassword() {
+            playClickSound(); // 添加点击音效
+            
             const passwordInput = document.getElementById('passwordInput');
             const warningText = document.getElementById('warningText');
             
@@ -467,12 +560,14 @@
             
             // 添加事件监听：点击"留下"按钮
             document.getElementById('stay-btn').addEventListener('click', function() {
+                playClickSound(); // 添加点击音效
                 document.body.removeChild(overlay);
                 document.body.style.overflow = '';
             });
             
             // 添加事件监听：点击"离开"按钮
             document.getElementById('leave-btn').addEventListener('click', function() {
+                playClickSound(); // 添加点击音效
                 // 真正离开的逻辑
                 window.removeEventListener('beforeunload', unloadEventHandler);
                 window.location.href = 'about:blank';
@@ -544,11 +639,44 @@
             });
         }
         
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
+        // 更新进度条
+        function updateProgress(percentage, message) {
+            const progressBar = document.getElementById('progressBar');
+            const loadingSubtext = document.getElementById('loadingSubtext');
+            
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = Math.round(percentage) + '%';
+            }
+            
+            if (loadingSubtext && message) {
+                loadingSubtext.textContent = message;
+            }
+        }
+        
+        // 资源加载完成后的初始化
+        function initAfterResourcesLoaded() {
+            // 更新进度到100%
+            updateProgress(100, '加载完成！');
+            
+            // 隐藏加载界面
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                // 修改网页标题为真实标题
+                document.title = "东北家乡验证程序";
+            }, 500);
+            
             createSnowflakes();
             createMusicNotes();
             initUnloadHandler();
+            
+            // 添加点击音效到整个文档
+            document.addEventListener('click', function(e) {
+                // 排除输入框点击，避免干扰输入
+                if (!e.target.matches('input')) {
+                    playClickSound();
+                }
+            });
             
             // 添加按键监听
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -560,6 +688,7 @@
             // 禁用右键菜单
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
+                playClickSound(); // 添加点击音效
                 alert('此操作已被禁止！');
             });
             
@@ -591,6 +720,55 @@
                 });
                 document.body.removeEventListener('click', musicStarter);
             });
+        }
+        
+        // 检查资源是否加载完成
+        function checkResourcesLoaded() {
+            const resources = [
+                'https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg',
+                'https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/大东北是我的家乡.mp3',
+                'https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/your-click-sound.mp3'
+            ];
+            
+            let loadedCount = 0;
+            const totalCount = resources.length;
+            
+            // 初始进度
+            updateProgress(10, '正在连接服务器...');
+            
+            resources.forEach((url, index) => {
+                const img = new Image();
+                img.onload = img.onerror = function() {
+                    loadedCount++;
+                    const progress = 10 + (loadedCount / totalCount) * 80; // 从10%开始，到90%结束
+                    updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
+                    
+                    if (loadedCount === totalCount) {
+                        updateProgress(95, '正在初始化页面...');
+                        setTimeout(initAfterResourcesLoaded, 500);
+                    }
+                };
+                img.src = url;
+            });
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟初始加载进度
+            updateProgress(5, '准备加载资源...');
+            
+            setTimeout(() => {
+                checkResourcesLoaded();
+            }, 800);
+            
+            // 设置超时，防止资源加载失败导致页面一直显示加载中
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading.style.display !== 'none') {
+                    loading.innerHTML = '<p>部分资源加载较慢或失败，继续加载中...</p><p>您可以尝试刷新页面</p>';
+                    initAfterResourcesLoaded();
+                }
+            }, 15000);
         });
     </script>
 </body>
