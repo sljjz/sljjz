@@ -186,6 +186,79 @@
             color: #e65100;
         }
         
+        /* 浮动确认对话框样式 */
+        #unload-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #unload-dialog {
+            position: absolute;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            text-align: center;
+            min-width: 320px;
+            max-width: 90%;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            animation: shake-dialog 0.8s ease;
+        }
+        
+        @keyframes shake-dialog {
+            0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+            25% { transform: translateX(-8px) rotate(-2deg) scale(1.02); }
+            50% { transform: translateX(8px) rotate(2deg) scale(0.98); }
+            75% { transform: translateX(-5px) rotate(-1deg) scale(1.01); }
+        }
+        
+        .dialog-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .dialog-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        #stay-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        #stay-btn:hover {
+            background: #45a049;
+            transform: scale(1.08);
+        }
+        
+        #leave-btn {
+            background: #e62129;
+            color: white;
+        }
+        
+        #leave-btn:hover {
+            background: #c41a22;
+            transform: scale(1.08);
+        }
+        
         /* 防止手机浏览器工具栏 */
         @media (max-height: 700px) {
             .container {
@@ -204,6 +277,37 @@
             h1 {
                 font-size: 20px;
             }
+            
+            #unload-dialog {
+                min-width: 280px;
+                padding: 20px;
+            }
+            
+            .dialog-btn {
+                min-width: 100px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* 防止长按菜单 */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
     </style>
 </head>
@@ -241,8 +345,10 @@
         </div>
     </div>
     
+    <!-- 音乐文件已经改为相对路径，请将bg-music.mp3上传到同一目录 -->
     <audio id="bgMusic" loop>
-        <source src="https://sq-sycdn.kuwo.cn/63fab1a636b6f12086f9f2797173d0fb/68ab250e/resource/n3/7/33/1785011434.mp3?from=vip" type="audio/mpeg">
+        <source src="bg-music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
     </audio>
     
     <script>
@@ -301,13 +407,16 @@
                 passwordInput.disabled = true;
                 document.querySelector('.submit-btn').disabled = true;
                 
+                // 移除关闭拦截
+                window.removeEventListener('beforeunload', unloadEventHandler);
+                
                 // 显示关闭提示
                 setTimeout(() => {
                     alert('验证成功！现在您可以关闭此页面了。');
                     document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;background:#f0f8ff;padding:20px;text-align:center;"><h1 style="color:green;margin-bottom:20px;font-size:24px;">验证成功！</h1><p style="font-size:18px;">您现在可以安全关闭此页面了。</p><i class="fas fa-check-circle" style="font-size:50px;color:green;margin-top:20px;"></i></div>';
                 }, 1500);
             } else {
-                warningText.textcontent = '密码错误，请重新输入！';
+                warningText.textContent = '密码错误，请重新输入！';
                 passwordInput.value = '';
                 
                 // 抖动输入框
@@ -318,10 +427,128 @@
             }
         }
         
+        // 创建浮动确认对话框
+        function createFloatingConfirmDialog(e) {
+            e.preventDefault();
+            e.returnValue = '';
+            
+            // 如果对话框已经存在，则不再创建
+            if (document.getElementById('unload-overlay')) {
+                return;
+            }
+            
+            // 创建覆盖层
+            const overlay = document.createElement('div');
+            overlay.id = 'unload-overlay';
+            
+            // 创建会移动的对话框
+            const dialog = document.createElement('div');
+            dialog.id = 'unload-dialog';
+            
+            // 设置随机初始位置
+            const randomX = Math.random() * (window.innerWidth - 320);
+            const randomY = Math.random() * (window.innerHeight - 200);
+            dialog.style.left = `${randomX}px`;
+            dialog.style.top = `${randomY}px`;
+            
+            dialog.innerHTML = `
+                <h3 style="color: #e62129; margin-bottom: 15px;"><i class="fas fa-exclamation-triangle"></i> 验证未完成！</h3>
+                <p style="margin-bottom: 10px; line-height: 1.5;">您确定要离开吗？</p>
+                <p style="margin-bottom: 15px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
+                <div class="dialog-buttons">
+                    <button id="stay-btn" class="dialog-btn"><i class="fas fa-shield-alt"></i> 留下继续</button>
+                    <button id="leave-btn" class="dialog-btn"><i class="fas fa-running"></i> 强行离开</button>
+                </div>
+            `;
+            
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+            
+            // 添加事件监听：点击"留下"按钮
+            document.getElementById('stay-btn').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+                document.body.style.overflow = '';
+            });
+            
+            // 添加事件监听：点击"离开"按钮
+            document.getElementById('leave-btn').addEventListener('click', function() {
+                // 真正离开的逻辑
+                window.removeEventListener('beforeunload', unloadEventHandler);
+                window.location.href = 'about:blank';
+            });
+            
+            // 让对话框随机移动的函数
+            function moveDialog() {
+                const dialog = document.getElementById('unload-dialog');
+                if (!dialog) return;
+                
+                const newX = Math.random() * (window.innerWidth - 320);
+                const newY = Math.random() * (window.innerHeight - 200);
+                
+                dialog.style.left = `${newX}px`;
+                dialog.style.top = `${newY}px`;
+                
+                // 添加一些视觉反馈
+                dialog.style.transform = 'scale(1.05) rotate(2deg)';
+                setTimeout(() => {
+                    if (dialog) dialog.style.transform = 'scale(1) rotate(0deg)';
+                }, 300);
+            }
+            
+            // 当鼠标靠近对话框时移动它
+            dialog.addEventListener('mouseenter', function() {
+                moveDialog();
+                // 设置一个定时器，持续移动增加难度
+                dialog.moveInterval = setInterval(moveDialog, 800);
+            });
+            
+            dialog.addEventListener('mouseleave', function() {
+                if (dialog.moveInterval) {
+                    clearInterval(dialog.moveInterval);
+                }
+            });
+            
+            // 触摸设备支持
+            dialog.addEventListener('touchstart', function(e) {
+                if (e.target.closest('.dialog-btn')) return;
+                e.preventDefault();
+                moveDialog();
+            }, { passive: false });
+            
+            // 定时自动移动，增加难度
+            dialog.autoMoveInterval = setInterval(moveDialog, 2000);
+        }
+        
+        let hasInteracted = false;
+        let unloadEventHandler = null;
+        
+        // 初始化关闭拦截
+        function initUnloadHandler() {
+            unloadEventHandler = function(e) {
+                const passwordInput = document.getElementById('passwordInput');
+                if (!passwordInput.disabled) {
+                    createFloatingConfirmDialog(e);
+                }
+            };
+            
+            // 当用户与页面交互后再添加事件监听
+            const interactionEvents = ['click', 'keydown', 'mousedown', 'touchstart', 'input'];
+            interactionEvents.forEach(event => {
+                document.addEventListener(event, function() {
+                    if (!hasInteracted) {
+                        hasInteracted = true;
+                        window.addEventListener('beforeunload', unloadEventHandler);
+                    }
+                }, { once: true });
+            });
+        }
+        
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             createSnowflakes();
             createMusicNotes();
+            initUnloadHandler();
             
             // 添加按键监听
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -358,41 +585,13 @@
             }, 1000);
             
             // 点击页面任意位置开始播放音乐
-            document.body.addEventListener('click', function() {
+            document.body.addEventListener('click', function musicStarter() {
                 bgMusic.play().catch(e => {
                     console.log('音乐播放需要用户交互');
                 });
-                
-                // 移除点击监听，避免重复绑定
-                document.body.removeEventListener('click', arguments.callee);
+                document.body.removeEventListener('click', musicStarter);
             });
         });
-        
-        // 添加抖动动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                20%, 40%, 60%, 80% { transform: translateX(5px); }
-            }
-            
-            /* 防止长按菜单 */
-            * {
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-            
-            input, textarea {
-                -webkit-user-select: text;
-                user-select: text;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
