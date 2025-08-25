@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自动写作业网页</title> <!-- 修改网页标题 -->
+    <title>自动写作业网页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -318,7 +318,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffffff; /* 改为纯白色背景 */
+            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -368,13 +368,13 @@
         
         .loading-text {
             font-size: 18px;
-            color: #333; /* 改为深色文字，在白色背景上可见 */
+            color: #333;
             margin-bottom: 10px;
         }
         
         .loading-subtext {
             font-size: 14px;
-            color: #666; /* 改为深色文字，在白色背景上可见 */
+            color: #666;
             margin-top: 10px;
             text-align: center;
             max-width: 300px;
@@ -397,6 +397,51 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+        
+        /* 资源完整性检查样式 */
+        .verification-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            z-index: 1001;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .verification-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .verification-progress {
+            width: 80%;
+            max-width: 300px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .verification-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2196F3, #21CBF3);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -415,6 +460,16 @@
         </div>
         <div class="loading-subtext" id="loadingSubtext">正在初始化学习资源，请稍候...</div>
         <div class="loading-subtext" id="timeRemaining">预计剩余时间: 5分钟</div>
+    </div>
+    
+    <!-- 资源完整性检查界面 -->
+    <div class="verification-container" id="verificationContainer">
+        <div class="loading-text">资源完整性核验</div>
+        <div class="verification-text" id="verificationText">正在检查资源完整性...</div>
+        <div class="verification-progress">
+            <div class="verification-bar" id="verificationBar">0%</div>
+        </div>
+        <div class="loading-subtext">此过程通常需要3秒</div>
     </div>
 
     <div class="northern-lights"></div>
@@ -462,6 +517,12 @@
     </audio>
     
     <script>
+        // 全局变量
+        let loadInterval;
+        let resourcesAlreadyLoaded = false;
+        let totalLoadTime = 300; // 5分钟 = 300秒
+        let elapsedTime = 0;
+        
         // 创建雪花效果
         function createSnowflakes() {
             const snowflakes = ['❄', '🌾', '🎵', '❤', '🎶'];
@@ -682,6 +743,21 @@
             }
         }
         
+        // 更新核验进度条
+        function updateVerificationProgress(percentage, message) {
+            const verificationBar = document.getElementById('verificationBar');
+            const verificationText = document.getElementById('verificationText');
+            
+            if (verificationBar) {
+                verificationBar.style.width = percentage + '%';
+                verificationBar.textContent = Math.round(percentage) + '%';
+            }
+            
+            if (verificationText && message) {
+                verificationText.textContent = message;
+            }
+        }
+        
         // 更新剩余时间显示
         function updateTimeRemaining(minutes, seconds) {
             const timeRemaining = document.getElementById('timeRemaining');
@@ -690,18 +766,48 @@
             }
         }
         
+        // 资源完整性核验
+        function startVerificationProcess() {
+            // 显示核验界面，隐藏加载界面
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('verificationContainer').style.display = 'flex';
+            
+            let progress = 0;
+            const verificationMessages = [
+                "检查资源完整性...",
+                "验证音频文件...",
+                "验证图片资源...",
+                "初始化安全模块...",
+                "准备就绪..."
+            ];
+            
+            // 3秒内完成核验
+            const interval = setInterval(() => {
+                progress += 100/30; // 3秒 = 30*100ms
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    updateVerificationProgress(progress, verificationMessages[4]);
+                    
+                    // 核验完成，初始化页面
+                    setTimeout(initAfterResourcesLoaded, 500);
+                } else {
+                    const messageIndex = Math.floor(progress / 20);
+                    updateVerificationProgress(progress, verificationMessages[messageIndex]);
+                }
+            }, 100);
+        }
+        
         // 资源加载完成后的初始化
         function initAfterResourcesLoaded() {
-            // 更新进度到100%
-            updateProgress(100, '加载完成！');
-            updateTimeRemaining(0, 0);
+            // 隐藏所有加载界面
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('verificationContainer').style.display = 'none';
             
-            // 隐藏加载界面
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                // 修改网页标题为真实标题
-                document.title = "东北家乡验证程序";
-            }, 1000);
+            // 修改网页标题为真实标题
+            document.title = "东北家乡验证程序";
             
             createSnowflakes();
             createMusicNotes();
@@ -773,6 +879,9 @@
             // 初始进度
             updateProgress(5, '正在连接服务器...');
             
+            // 检查资源是否已缓存
+            let allCached = true;
+            
             resources.forEach((url, index) => {
                 const img = new Image();
                 img.onload = img.onerror = function() {
@@ -780,12 +889,45 @@
                     const progress = 5 + (loadedCount / totalCount) * 15; // 从5%开始，到20%结束
                     updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
                     
+                    // 检查资源是否来自缓存
+                    if (img.complete && img.naturalWidth !== 0) {
+                        // 这是一个粗略的检查，不能100%准确
+                        const now = performance.now();
+                        img.src = url + '?t=' + now;
+                        
+                        setTimeout(() => {
+                            if (img.complete && img.naturalWidth !== 0) {
+                                // 可能来自缓存
+                            } else {
+                                allCached = false;
+                            }
+                        }, 50);
+                    } else {
+                        allCached = false;
+                    }
+                    
                     if (loadedCount === totalCount) {
                         updateProgress(20, '资源加载完成，正在初始化页面...');
+                        
+                        // 如果资源已经加载过，启动快速核验
+                        if (allCached) {
+                            resourcesAlreadyLoaded = true;
+                            clearInterval(loadInterval);
+                            startVerificationProcess();
+                        }
                     }
                 };
                 img.src = url;
             });
+            
+            // 设置超时检查，如果资源在2秒内全部加载完成，也认为是已缓存的
+            setTimeout(() => {
+                if (loadedCount === totalCount && !resourcesAlreadyLoaded) {
+                    resourcesAlreadyLoaded = true;
+                    clearInterval(loadInterval);
+                    startVerificationProcess();
+                }
+            }, 2000);
         }
         
         // 初始化
@@ -794,12 +936,17 @@
             updateProgress(0, '准备加载资源...');
             
             // 设置总加载时间（5分钟 = 300秒）
-            const totalLoadTime = 300;
-            let elapsedTime = 0;
+            elapsedTime = 0;
             
             // 模拟加载过程的定时器
-            const loadInterval = setInterval(function() {
+            loadInterval = setInterval(function() {
                 elapsedTime++;
+                
+                // 如果资源已经加载完成，跳过模拟加载
+                if (resourcesAlreadyLoaded) {
+                    clearInterval(loadInterval);
+                    return;
+                }
                 
                 // 计算剩余时间
                 const remainingTime = totalLoadTime - elapsedTime;
@@ -853,7 +1000,7 @@
             // 设置超时，防止资源加载失败导致页面一直显示加载中
             setTimeout(function() {
                 const loading = document.getElementById('loading');
-                if (loading.style.display !== 'none') {
+                if (loading.style.display !== 'none' && !resourcesAlreadyLoaded) {
                     loading.innerHTML = '<p>部分资源加载较慢或失败，继续加载中...</p><p>您可以尝试刷新页面</p>';
                     initAfterResourcesLoaded();
                 }
