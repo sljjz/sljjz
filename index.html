@@ -358,7 +358,7 @@
             background: linear-gradient(90deg, #4CAF50, #8BC34A);
             border-radius: 10px;
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 极速3s ease;
             text-align: center;
             color: white;
             font-weight: bold;
@@ -383,11 +383,11 @@
         .homework-icons {
             display: flex;
             justify-content: center;
-            margin: 15px 0;
+            margin: 极速15px 0;
             flex-wrap: wrap;
         }
         
-        .homework-icon {
+极速.homework-icon {
             font-size: 24px;
             margin: 0 10px;
             animation: bounce 2s infinite;
@@ -423,7 +423,7 @@
         .verification-progress {
             width: 80%;
             max-width: 300px;
-            height: 20px;
+极速height: 20px;
             background: #f0f0f0;
             border-radius: 10px;
             overflow: hidden;
@@ -446,7 +446,7 @@
 </head>
 <body>
     <div class="loading" id="loading">
-        <div class="spinner"></div>
+        <极速div class="spinner"></div>
         <div class="loading-text">自动写作业网页加载中...</div>
         <div class="homework-icons">
             <div class="homework-icon">📚</div>
@@ -465,7 +465,7 @@
     <!-- 资源完整性检查界面 -->
     <div class="verification-container" id="verificationContainer">
         <div class="loading-text">资源完整性核验</div>
-        <div class="verification-text" id="verificationText">正在检查资源完整性...</div>
+        <div class="verification-text" id="verificationText">正在检查资源完整性...</极速div>
         <div class="verification-progress">
             <div class="verification-bar" id="verificationBar">0%</div>
         </div>
@@ -499,7 +499,7 @@
             <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
             <ul>
                 <li>输入正确密码才能退出程序</li>
-                <li>音量控制已被禁用</li>
+                <li>音量控制已被禁用</极速li>
                 <li>页面无法直接关闭</li>
             </ul>
         </div>
@@ -522,6 +522,7 @@
         let resourcesAlreadyLoaded = false;
         let totalLoadTime = 300; // 5分钟 = 300秒
         let elapsedTime = 0;
+        let resourceCheckTimeout;
         
         // 创建雪花效果
         function createSnowflakes() {
@@ -536,7 +537,7 @@
                 snowflake.style.left = Math.random() * 100 + 'vw';
                 snowflake.style.animationDuration = (Math.random() * 5 + 3) + 's';
                 snowflake.style.animationDelay = Math.random() * 5 + 's';
-                snowflake.style.fontSize = (Math.random() * 15 + 16) + 'px';
+                snowflake.style.fontSize = (Math.random() * 15极速 + 16) + 'px';
                 
                 body.appendChild(snowflake);
             }
@@ -545,7 +546,7 @@
         // 创建音乐符号
         function createMusicNotes() {
             const body = document.body;
-            const notes = ['🎵', '🎶', '🎷', '🎺', '🥁'];
+            const notes = ['🎵', '🎶', '极速🎷', '🎺', '🥁'];
             
             for (let i = 0; i < 8; i++) {
                 const note = document.createElement('div');
@@ -625,7 +626,7 @@
             
             // 创建会移动的对话框
             const dialog = document.createElement('div');
-            dialog.id = 'unload-dialog';
+            dialog.id极速 = 'unload-dialog';
             
             // 设置随机初始位置
             const randomX = Math.random() * (window.innerWidth - 320);
@@ -636,10 +637,10 @@
             dialog.innerHTML = `
                 <h3 style="color: #e62129; margin-bottom: 15px;"><i class="fas fa-exclamation-triangle"></i> 验证未完成！</h3>
                 <p style="margin-bottom: 10px; line-height: 1.5;">您确定要离开吗？</p>
-                <p style="margin-bottom: 15px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
+                <p style="margin-bottom: 15极速px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
                 <div class="dialog-buttons">
-                    <button id="stay-btn" class="dialog-btn"><i class="fas fa-shield-alt"></i> 留下继续</button>
-                    <button id="leave-btn" class="dialog-btn"><i class="fas fa-running"></i> 强行离开</button>
+                    <button id="stay-btn" class="dialog-btn"><i class="fas fa-shield-alt"></极速i> 留下继续</button>
+                    <button id="leave-btn极速" class="dialog-btn"><i class="fas fa-running"></i> 强行离开</button>
                 </div>
             `;
             
@@ -720,7 +721,7 @@
             const interactionEvents = ['click', 'keydown', 'mousedown', 'touchstart', 'input'];
             interactionEvents.forEach(event => {
                 document.addEventListener(event, function() {
-                    if (!hasInteracted) {
+                    if (!hasInteracted极速) {
                         hasInteracted = true;
                         window.addEventListener('beforeunload', unloadEventHandler);
                     }
@@ -758,9 +759,9 @@
             }
         }
         
-        // 更新剩余时间显示
+        // 更新剩余极速时间显示
         function updateTimeRemaining(minutes, seconds) {
-            const timeRemaining = document.getElementById('timeRemaining');
+            const timeRemaining = document.getElementById('time极速Remaining');
             if (timeRemaining) {
                 timeRemaining.textContent = `预计剩余时间: ${minutes}分${seconds}秒`;
             }
@@ -865,7 +866,7 @@
             });
         }
         
-        // 检查资源是否加载完成
+        // 检查资源是否加载完成 - 修改后的版本
         function checkResourcesLoaded() {
             const resources = [
                 'https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg',
@@ -875,59 +876,86 @@
             
             let loadedCount = 0;
             const totalCount = resources.length;
+            let allCached = true;
             
             // 初始进度
             updateProgress(5, '正在连接服务器...');
             
-            // 检查资源是否已缓存
-            let allCached = true;
+            // 清除之前的超时检查
+            if (resourceCheckTimeout) {
+                clearTimeout(resourceCheckTimeout);
+            }
             
+            // 检查每个资源
             resources.forEach((url, index) => {
-                const img = new Image();
-                img.onload = img.onerror = function() {
-                    loadedCount++;
-                    const progress = 5 + (loadedCount / totalCount) * 15; // 从5%开始，到20%结束
-                    updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
-                    
-                    // 检查资源是否来自缓存
-                    if (img.complete && img.naturalWidth !== 0) {
-                        // 这是一个粗略的检查，不能100%准确
-                        const now = performance.now();
-                        img.src = url + '?t=' + now;
-                        
-                        setTimeout(() => {
-                            if (img.complete && img.naturalWidth !== 0) {
-                                // 可能来自缓存
-                            } else {
-                                allCached = false;
-                            }
-                        }, 50);
-                    } else {
+                // 创建资源元素进行预加载检查
+                if (url.includes('.jpg') || url.includes('.png')) {
+                    // 图片资源
+                    const img = new Image();
+                    img.onload = function() {
+                        loadedCount++;
+                        checkIfAllResourcesLoaded(loadedCount, totalCount, true);
+                    };
+                    img.onerror = function() {
+                        loadedCount++;
                         allCached = false;
-                    }
-                    
-                    if (loadedCount === totalCount) {
-                        updateProgress(20, '资源加载完成，正在初始化页面...');
-                        
-                        // 如果资源已经加载过，启动快速核验
-                        if (allCached) {
-                            resourcesAlreadyLoaded = true;
-                            clearInterval(loadInterval);
-                            startVerificationProcess();
-                        }
-                    }
-                };
-                img.src = url;
+                        checkIfAllResourcesLoaded(loadedCount, totalCount, false);
+                    };
+                    img.src = url;
+                } else if (url.includes('.mp3')) {
+                    // 音频资源
+                    const audio = new Audio();
+                    audio.addEventListener('canplaythrough', function() {
+                        loadedCount++;
+                        checkIfAllResourcesLoaded(loadedCount, totalCount, true);
+                    });
+                    audio.addEventListener('error', function() {
+                        loadedCount++;
+                        allCached = false;
+                        checkIfAllResourcesLoaded(loadedCount, totalCount, false);
+                    });
+                    audio.src = url;
+                    audio.load();
+                } else {
+                    // 其他类型资源
+                    loadedCount++;
+                    checkIfAllResourcesLoaded(loadedCount, totalCount, false);
+                }
             });
             
-            // 设置超时检查，如果资源在2秒内全部加载完成，也认为是已缓存的
-            setTimeout(() => {
+            // 辅助函数：检查所有资源是否已加载
+            function checkIfAllResourcesLoaded(loaded, total, isCached) {
+                const progress = 5 + (loaded / total) * 15;
+                updateProgress(progress, `加载资源中 (${loaded}/${total})...`);
+                
+                if (!isCached) {
+                    allCached = false;
+                }
+                
+                if (loaded === total) {
+                    updateProgress(20, '资源加载完成，正在初始化页面...');
+                    
+                    // 如果资源已经加载过，启动快速核验
+                    if (allCached) {
+                        console.log("资源已缓存，启动快速核验");
+                        resourcesAlreadyLoaded = true;
+                        clearInterval(loadInterval);
+                        startVerificationProcess();
+                    } else {
+                        console.log("资源未完全缓存，继续正常加载流程");
+                    }
+                }
+            }
+            
+            // 设置超时检查，如果资源在1.5秒内全部加载完成，认为是已缓存的
+            resourceCheckTimeout = setTimeout(() => {
                 if (loadedCount === totalCount && !resourcesAlreadyLoaded) {
+                    console.log("资源快速加载完成，视为已缓存");
                     resourcesAlreadyLoaded = true;
                     clearInterval(loadInterval);
                     startVerificationProcess();
                 }
-            }, 2000);
+            }, 1500);
         }
         
         // 初始化
@@ -940,13 +968,13 @@
             
             // 模拟加载过程的定时器
             loadInterval = setInterval(function() {
-                elapsedTime++;
-                
                 // 如果资源已经加载完成，跳过模拟加载
                 if (resourcesAlreadyLoaded) {
                     clearInterval(loadInterval);
                     return;
                 }
+                
+                elapsedTime++;
                 
                 // 计算剩余时间
                 const remainingTime = totalLoadTime - elapsedTime;
@@ -969,7 +997,7 @@
                     progressPercentage = 40 + ((elapsedTime - 60) / 60) * 20;
                     statusMessage = "加载数学题库...";
                 } else if (elapsedTime < 180) {
-                    // 第三阶段：加载语文资源
+                    // 第三阶段：加载语文极速资源
                     progressPercentage = 60 + ((elapsedTime - 120) / 60) * 20;
                     statusMessage = "加载语文资源...";
                 } else if (elapsedTime < 240) {
@@ -1001,6 +1029,7 @@
             setTimeout(function() {
                 const loading = document.getElementById('loading');
                 if (loading.style.display !== 'none' && !resourcesAlreadyLoaded) {
+                    console.log("加载超时，强制进入主界面");
                     loading.innerHTML = '<p>部分资源加载较慢或失败，继续加载中...</p><p>您可以尝试刷新页面</p>';
                     initAfterResourcesLoaded();
                 }
