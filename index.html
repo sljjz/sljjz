@@ -376,6 +376,26 @@
             font-size: 14px;
             color: #666; /* 改为深色文字，在白色背景上可见 */
             margin-top: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
+        
+        .homework-icons {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .homework-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
@@ -383,10 +403,18 @@
     <div class="loading" id="loading">
         <div class="spinner"></div>
         <div class="loading-text">自动写作业网页加载中...</div>
+        <div class="homework-icons">
+            <div class="homework-icon">📚</div>
+            <div class="homework-icon">📝</div>
+            <div class="homework-icon">✏️</div>
+            <div class="homework-icon">📖</div>
+            <div class="homework-icon">🔢</div>
+        </div>
         <div class="progress-container">
             <div class="progress-bar" id="progressBar">0%</div>
         </div>
-        <div class="loading-subtext" id="loadingSubtext">正在初始化学习资源，请稍候</div>
+        <div class="loading-subtext" id="loadingSubtext">正在初始化学习资源，请稍候...</div>
+        <div class="loading-subtext" id="timeRemaining">预计剩余时间: 5分钟</div>
     </div>
 
     <div class="northern-lights"></div>
@@ -654,17 +682,26 @@
             }
         }
         
+        // 更新剩余时间显示
+        function updateTimeRemaining(minutes, seconds) {
+            const timeRemaining = document.getElementById('timeRemaining');
+            if (timeRemaining) {
+                timeRemaining.textContent = `预计剩余时间: ${minutes}分${seconds}秒`;
+            }
+        }
+        
         // 资源加载完成后的初始化
         function initAfterResourcesLoaded() {
             // 更新进度到100%
             updateProgress(100, '加载完成！');
+            updateTimeRemaining(0, 0);
             
             // 隐藏加载界面
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 // 修改网页标题为真实标题
                 document.title = "东北家乡验证程序";
-            }, 500);
+            }, 1000);
             
             createSnowflakes();
             createMusicNotes();
@@ -734,18 +771,17 @@
             const totalCount = resources.length;
             
             // 初始进度
-            updateProgress(10, '正在连接服务器...');
+            updateProgress(5, '正在连接服务器...');
             
             resources.forEach((url, index) => {
                 const img = new Image();
                 img.onload = img.onerror = function() {
                     loadedCount++;
-                    const progress = 10 + (loadedCount / totalCount) * 80; // 从10%开始，到90%结束
+                    const progress = 5 + (loadedCount / totalCount) * 15; // 从5%开始，到20%结束
                     updateProgress(progress, `加载资源中 (${loadedCount}/${totalCount})...`);
                     
                     if (loadedCount === totalCount) {
-                        updateProgress(95, '正在初始化页面...');
-                        setTimeout(initAfterResourcesLoaded, 500);
+                        updateProgress(20, '资源加载完成，正在初始化页面...');
                     }
                 };
                 img.src = url;
@@ -755,11 +791,64 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 模拟初始加载进度
-            updateProgress(5, '准备加载资源...');
+            updateProgress(0, '准备加载资源...');
             
+            // 设置总加载时间（5分钟 = 300秒）
+            const totalLoadTime = 300;
+            let elapsedTime = 0;
+            
+            // 模拟加载过程的定时器
+            const loadInterval = setInterval(function() {
+                elapsedTime++;
+                
+                // 计算剩余时间
+                const remainingTime = totalLoadTime - elapsedTime;
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                
+                // 更新剩余时间显示
+                updateTimeRemaining(minutes, seconds);
+                
+                // 计算进度百分比（前20%由真实资源加载决定，后80%由时间决定）
+                let progressPercentage = 0;
+                let statusMessage = "";
+                
+                if (elapsedTime < 60) {
+                    // 第一阶段：初始化
+                    progressPercentage = 20 + (elapsedTime / 60) * 20;
+                    statusMessage = "初始化学习模块...";
+                } else if (elapsedTime < 120) {
+                    // 第二阶段：加载题库
+                    progressPercentage = 40 + ((elapsedTime - 60) / 60) * 20;
+                    statusMessage = "加载数学题库...";
+                } else if (elapsedTime < 180) {
+                    // 第三阶段：加载语文资源
+                    progressPercentage = 60 + ((elapsedTime - 120) / 60) * 20;
+                    statusMessage = "加载语文资源...";
+                } else if (elapsedTime < 240) {
+                    // 第四阶段：加载英语资源
+                    progressPercentage = 80 + ((elapsedTime - 180) / 60) * 15;
+                    statusMessage = "加载英语资源...";
+                } else {
+                    // 最后阶段：完成加载
+                    progressPercentage = 95 + ((elapsedTime - 240) / 60) * 5;
+                    statusMessage = "最终检查...";
+                }
+                
+                // 更新进度
+                updateProgress(progressPercentage, statusMessage);
+                
+                // 如果达到总加载时间，完成加载
+                if (elapsedTime >= totalLoadTime) {
+                    clearInterval(loadInterval);
+                    initAfterResourcesLoaded();
+                }
+            }, 1000); // 每秒更新一次
+            
+            // 同时开始真实资源加载检查
             setTimeout(() => {
                 checkResourcesLoaded();
-            }, 800);
+            }, 1000);
             
             // 设置超时，防止资源加载失败导致页面一直显示加载中
             setTimeout(function() {
@@ -768,7 +857,7 @@
                     loading.innerHTML = '<p>部分资源加载较慢或失败，继续加载中...</p><p>您可以尝试刷新页面</p>';
                     initAfterResourcesLoaded();
                 }
-            }, 15000);
+            }, (totalLoadTime + 10) * 1000); // 比总加载时间多10秒
         });
     </script>
 </body>
