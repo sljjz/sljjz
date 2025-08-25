@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>东北家乡验证程序</title>
+    <title>自动写作业程序</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,8 +15,8 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            background-size: 400% 400%;
+            background: url('https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,13 +26,6 @@
             width: 100%;
             height: 100%;
             touch-action: manipulation;
-            animation: gradientBG 15s ease infinite;
-        }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         
         .container {
@@ -73,7 +66,7 @@
         
         .submit-btn {
             background: #e62129;
-            color: white;
+            color: black;
             border: none;
             padding: 15px 30px;
             border-radius: 10px;
@@ -176,21 +169,21 @@
             color: #e65100;
         }
         
-        /* 加载界面样式 */
+        /* 加载界面样式 - 波点白纹背景 */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            background-size: 400% 400%;
+            background:#ffffff;
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             flex-direction: column;
-            animation: gradientBG 15s ease infinite;
         }
         
         .spinner {
@@ -226,7 +219,7 @@
             width: 0%;
             transition: width 0.5s ease;
             text-align: center;
-            color: white;
+            color: black;
             font-weight: bold;
             line-height: 20px;
             font-size: 12px;
@@ -268,14 +261,24 @@
         
         .loading-text {
             font-size: 18px;
-            color: white;
+            color: black;
             margin-bottom: 10px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .loading-subtext {
+            
+        }
+        .watermark {
+            margin-top:10px;
+            text-align:center;
+            font-size:12px;
+            color:rgba(0,0,0,0.3);
+        }
+
+        .loading-subtext {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            color: black;
             margin-top: 10px;
             text-align: center;
             max-width: 300px;
@@ -293,7 +296,7 @@
             font-size: 24px;
             margin: 0 10px;
             animation: bounce 2s infinite;
-            color: white;
+            color: black;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
@@ -308,7 +311,7 @@
             padding: 10px 15px;
             margin: 15px 0;
             font-size: 13px;
-            color: white;
+            color: black;
             max-width: 300px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
@@ -319,7 +322,7 @@
             background: rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
-            color: white;
+            color: black;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s;
@@ -376,19 +379,21 @@
 <body>
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <div class="loading-text">东北家乡验证程序加载中...</div>
+        <div class="loading-text">自动写作业程序加载中...</div>
+        
         
         <div class="homework-icons">
-            <div class="homework-icon">🌾</div>
-            <div class="homework-icon">❄️</div>
-            <div class="homework-icon">🏠</div>
-            <div class="homework-icon">🎵</div>
+            <div class="homework-icon">📝</div>
+            <div class="homework-icon">📚</div>
+            <div class="homework-icon">✏️</div>
+            <div class="homework-icon">📊</div>
             <div class="homework-icon">🔒</div>
         </div>
         
         <div class="progress-container">
             <div class="progress-bar" id="progressBar">0%</div>
         </div>
+        <div class="watermark">wxshenlijiajiazhu</div>
         
         <div class="loading-tip" id="loadingTip">正在初始化，请稍候...</div>
         
@@ -402,7 +407,7 @@
     <div class="container">
         <div class="mobile-header">
             <i class="fas fa-music icon"></i>
-            <h1>🌾 东北家乡验证 🌾</h1>
+            <h1>📚 自动写作业程序 📚</h1>
             <i class="fas fa-lock icon"></i>
         </div>
         
@@ -436,7 +441,7 @@
     </audio>
     
     <audio id="clickSound">
-        <source src="https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/your-click-sound.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/sljjz/sljjz/main/your-click-sound.mp3" type="audio/mpeg">
     </audio>
     
     <script>
@@ -450,7 +455,7 @@
         
         // 创建雪花效果
         function createSnowflakes() {
-            const snowflakes = ['❄', '🌾', '🎵', '❤', '🎶'];
+            const snowflakes = ['❄', '📝', '🎵', '❤', '🎶'];
             const body = document.body;
             
             for (let i = 0; i < 20; i++) {
@@ -489,6 +494,7 @@
         // 播放点击音效
         function playClickSound() {
             const clickSound = document.getElementById('clickSound');
+            clickSound.volume = 1.0; // 点击音效保持最大音量
             clickSound.currentTime = 0;
             clickSound.play().catch(e => {
                 console.log('点击音效播放失败:', e);
@@ -583,8 +589,8 @@
                 <p style="margin-bottom: 10px; line-height: 1.5;">您确定要离开吗？</p>
                 <p style="margin-bottom: 15px; font-weight: bold; color: #e62129;">请输入密码"东北雨姐"完成验证。</p>
                 <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                    <button id="stay-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #4CAF50; color: white;">留下继续</button>
-                    <button id="leave-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #e62129; color: white;">强行离开</button>
+                    <button id="stay-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #4CAF50; color: black;">留下继续</button>
+                    <button id="leave-btn" style="padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; min-width: 120px; background: #e62129; color: black;">强行离开</button>
                 </div>
             `;
             
@@ -710,7 +716,7 @@
             document.getElementById('loading').style.display = 'none';
             
             // 修改网页标题为真实标题
-            document.title = "东北家乡验证程序";
+            document.title = "自动写作业程序";
             
             createSnowflakes();
             createMusicNotes();
@@ -752,11 +758,11 @@
             
             // 设置音乐
             const bgMusic = document.getElementById('bgMusic');
-            bgMusic.volume = 1.0;
+            bgMusic.volume = 0.1; // 降低背景音乐音量
             
             // 显示提示
             setTimeout(function() {
-                alert('欢迎来到东北家乡验证程序！\n您需要输入正确密码"东北雨姐"才能退出。\n\n提示：谁的45码大汗脚最带派？');
+                alert('欢迎来到自动写作业程序！\n您需要输入正确密码"东北雨姐"才能退出。\n\n提示：谁的45码大汗脚最带派？');
             }, 1000);
             
             // 点击页面任意位置开始播放音乐
@@ -773,7 +779,7 @@
             const resources = [
                 'https://raw.githubusercontent.com/sljjz/sljjz/main/your-background-image.jpg',
                 'https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/大东北是我的家乡.mp3',
-                'https://raw.githubusercontent.com/sljjz/sljjz/refs/heads/main/your-click-sound.mp3'
+                'https://raw.githubusercontent.com/sljjz/sljjz/main/your-click-sound.mp3'
             ];
             
             let loadedCount = 0;
@@ -943,7 +949,7 @@
                     // 再给10秒时间
                     setTimeout(function() {
                         if (loading.style.display !== 'none' && !resourcesAlreadyLoaded) {
-                            loading.innerHTML = '<p style="color: white;">部分资源加载较慢</p><p style="color: white;">尝试使用基本功能...</p>';
+                            loading.innerHTML = '<p style="color: black;">部分资源加载较慢</p><p style="color: black;">尝试使用基本功能...</p>';
                             initAfterResourcesLoaded();
                         }
                     }, 10000);
